@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition>
+            <h:form>  
+                <p:growl id="messages"/>
+
+                <p:menubar>
+                    <p:menuitem value="Home" url="#" icon="ui-icon-document"/>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <p:submenu label="Administrador" icon="ui-icon-document" >
+                            <p:menuitem value="Cadastro" url="/admin/home.jsf" />
+                            <p:separator />
+                            <p:menuitem value="Quit" url="#" />
+                        </p:submenu>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('ADMIN') or hasRole('COMISSAO')">
+                        <p:submenu label="Comissão" icon="ui-icon-pencil">
+                            <p:menuitem value="Cadastro" url="/comissao/home.jsf" />
+                            <p:separator />
+                            <p:menuitem value="Quit" url="#" />
+                        </p:submenu>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('ADMIN') or hasRole('COMISSAO') or hasRole('ORIENTADOR')">
+                        <p:submenu label="Orientador" icon="ui-icon-help">
+                            <p:menuitem value="Candidatos" url="/orientador/home.jsf" />
+                            <p:separator />
+                            <p:menuitem value="Quit" url="#" />
+                        </p:submenu>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('ADMIN') or hasRole('CANDIDATO')">
+                        <p:submenu label="Candidato" icon="ui-icon-help">
+                            <p:menuitem value="Cadastro" url="/candidato/home.jsf" />
+                            <p:separator />
+                            <p:menuitem value="Quit" url="#" />
+                        </p:submenu>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <p:submenu label="Manutenção" icon="ui-icon-gear">
+                            <p:submenu label="Ajax" icon="ui-icon-refresh">
+                                <p:menuitem value="Save" actionListener="#{menuView.save}" icon="ui-icon-disk" update="messages"/>
+                                <p:menuitem value="Update" actionListener="#{menuView.update}" icon="ui-icon-arrowrefresh-1-w" update="messages"/>
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax" icon="ui-icon-newwin">
+                                <p:menuitem value="Delete" actionListener="#{menuView.delete}" icon="ui-icon-close" update="messages" ajax="false"/>
+                            </p:submenu>
+                        </p:submenu>
+                    </sec:authorize>
+
+                    <f:facet name="options">
+                        <h:outputText value="Bem vindo: #{loginController.currentUsername}  "/>
+                        <h:commandButton  value="Logout" action="#{loginController.doLogout}"/>
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+        </ui:composition>
+    </body>
+</html>
+
+

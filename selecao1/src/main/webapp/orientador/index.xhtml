@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gerenciador de Livros</title>
+        <link type="text/css" rel="stylesheet" href="dot-luv/skin.css" />
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="left" width="200" header="Atividades" resizable="true" closable="true" collapsible="true">
+                <h:form prependId="false">
+                    <p:commandLink value="Novo Livro" actionListener="#{candidatoController.prepararAdicionarCandidato}" update="infosCandidato" oncomplete="dialogGerLivro.show()"/>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="center">
+                <h1>Gerenciador de Livros</h1>
+                <br/>
+                <h:form prependId="false">
+                    <p:dataTable id="tabela" var="candidato" value="#{candidatoController.listarCandidatos}">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Título"/>
+                            </f:facet>
+                            <h:outputText value="#{candidato.nome}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Poscomp"/>
+                            </f:facet>
+                            <h:outputText value="#{candidato.poscomp}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Nota Poscomp"/>
+                            </f:facet>
+                            <h:outputText value="#{candidato.notaPoscomp}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Eliminatoria"/>
+                            </f:facet>
+                            <h:outputText value="#{candidato.notaEliminatoria}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Prova Escrita"/>
+                            </f:facet>
+                            <h:outputText value="#{candidato.notaProvaEscrita}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Entrevista"/>
+                            </f:facet>
+                            <h:outputText value="#{candidato.notaEntrevista}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Alterar"/>
+                            </f:facet>
+                            <p:commandButton actionListener="#{candidatoController.prepararAlterarCandidato}" value="Alterar" update="infosCandidato" oncomplete="dialogGerCandidato.show()"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Excluir"/>
+                            </f:facet>
+                            <h:commandLink action="#{livroController.excluirLivro}" value="Excluir"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:layoutUnit>
+        </p:layout>
+ 
+        <p:dialog header="Gerencia de Candidato" widgetVar="dialogGerCandidato"  resizable="false" modal="true" showEffect="slide" width="500">
+            <h:form prependId="false">
+                <h:panelGrid id="infosCandidato" columns="2" style="margin-bottom:10px">
+ 
+                    <h:outputLabel for="nome" value="Nome:" />
+                    <h:inputText id="nome" value="#{candidatoController.candidato.nome}"/>
+  
+                    <p:commandButton update="tabela" oncomplete="dialogGerCandidato.hide();" actionListener="#{candidatoController.adicionarCandidato}" value="Inserir Candidato"/>
+                    <p:commandButton update="tabela" oncomplete="dialogGerCandidato.hide();" actionListener="#{candidatoController.alterarCandidato()}" value="Alterar Candidato"/>
+ 
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+ 
+    </h:body>
+</html>

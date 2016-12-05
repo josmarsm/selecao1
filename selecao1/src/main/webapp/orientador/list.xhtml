@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Pagina do orientador</title>
+    </h:head>
+
+    <h:body>
+        <ui:composition template="/template/common/commonLayout.xhtml">
+            <br/><br/><br/>
+            <ui:define name="content">
+
+                        <!-- <p:messages id="messages" /> -->
+                <p:growl id="messages" />
+
+                <p:dataTable value="#{checkListControllerchecks}" var="check" id="checkTable">
+                    <p:column headerText="name">
+                        #{check.name}
+                    </p:column>
+                    <p:column headerText="url">
+                        <a href="#{check.url}" target="_blank">
+                            #{check.url}
+                        </a>
+                    </p:column>
+                    <p:column headerText="operations">
+                        <h:form>
+                            <p:commandButton value="edit" action="#{checkListController.setCheck(check)}" update=":checkForm" />
+                            <p:commandButton value="remove" action="#{checkListController.remove(check)}" update=":checkTable, :messages" />
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+
+                <h:form id="checkForm">
+                    <p:focus />
+                    <p:panelGrid columns="2">
+                        name:
+                        <p:inputText value="#{checkListController.check.name}" />
+
+                        url:
+                        <p:inputText value="#{checkListController.check.url}" />
+                    </p:panelGrid>
+                    <p:commandButton value="save" action="#{checkListController.save()}" update="checkForm, :checkTable, :messages" />
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

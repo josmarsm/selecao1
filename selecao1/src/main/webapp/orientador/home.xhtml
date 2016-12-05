@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Pagina do orientador</title>
+    </h:head>
+
+    <h:body>
+        <ui:composition template="/template/common/commonLayout.xhtml">
+            <br/><br/><br/>
+            <ui:define name="content">
+                <h:form>
+                    <p:dataTable id="tbl" var="candidato" value="#{candidatoController.candidatoList}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                 {Exporters}"
+                                 paginator="true" 
+                                 rows="5" 
+                                 style="margin-bottom:20px; font-size:12px;">
+                        <f:facet name="{Exporters}">
+                            <h:commandLink>
+                                <p:graphicImage value="images/excel.png" width="24" />
+                                <p:dataExporter type="xls" target="tbl" fileName="candidato" />
+                            </h:commandLink>
+                            <h:commandLink>
+                                <p:graphicImage value="images/pdf.png" width="24" />
+                                <p:dataExporter type="pdf" target="tbl" fileName="candidato" />
+                            </h:commandLink>
+                            <h:commandLink>
+                                <p:graphicImage value="images/xml.png" width="24" />
+                                <p:dataExporter type="xml" target="tbl" fileName="candidato" />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column headerText="Nome" >
+                            <h:outputText value="#{candidato.nome}" />
+                        </p:column>
+                        <p:column headerText="Eliminiatória" style="width:70px">
+                            <h:outputText value="#{candidato.notaEliminatoria}" />
+                        </p:column>
+                        <p:column headerText="Poscomp" style="width:48px">
+                            <h:outputText value="#{candidato.poscomp}" />
+                        </p:column>
+                        <p:column headerText="Nota Poscomp" style="width:48px">
+                            <h:outputText value="#{candidato.notaPoscomp}" />
+                        </p:column>
+                        <p:column headerText="Prova Escrita" style="width:48px">
+                            <h:outputText value="#{candidato.notaProvaEscrita}" />
+                        </p:column>
+                        <p:column headerText="Entrevista" style="width:52px">
+                            <h:outputText value="#{candidato.notaEntrevista}" />
+                        </p:column>
+                        <p:column headerText="Editar" exportable="false">
+
+                            <h:commandLink  actionListener="#{candidatoBean.edit(candidato)}" value="Editar">
+                               <f:param value="#{candidato.id}" name="id"/>
+                            </h:commandLink>
+
+                        </p:column>
+                        <p:column headerText="Deletar" exportable="false">
+
+                            <h:commandLink action="#{alunoMBean.delete(aluno)}"
+                                           value="Excluir" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
