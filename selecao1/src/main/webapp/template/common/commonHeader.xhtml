@@ -17,30 +17,22 @@
                     <p:menuitem value="Home" url="#" icon="ui-icon-document"/>
                     <sec:authorize access="hasRole('ADMIN')">
                         <p:submenu label="Administrador" icon="ui-icon-document" >
-                            <p:menuitem value="Cadastro" url="/admin/home.jsf" />
-                            <p:separator />
-                            <p:menuitem value="Quit" url="#" />
+                            <p:menuitem value="Cadastro" url="/admin/home.jsf" />                      
                         </p:submenu>
                     </sec:authorize>
                     <sec:authorize access="hasRole('ADMIN') or hasRole('COMISSAO')">
                         <p:submenu label="Comissão" icon="ui-icon-pencil">
-                            <p:menuitem value="Cadastro" url="/comissao/home.jsf" />
-                            <p:separator />
-                            <p:menuitem value="Quit" url="#" />
+                            <p:menuitem value="Cadastro" url="/comissao/home.jsf" />                          
                         </p:submenu>
                     </sec:authorize>
                     <sec:authorize access="hasRole('ADMIN') or hasRole('COMISSAO') or hasRole('ORIENTADOR')">
-                        <p:submenu label="Orientador" icon="ui-icon-help">
-                            <p:menuitem value="Candidatos" url="/orientador/home.jsf" />
-                            <p:separator />
-                            <p:menuitem value="Quit" url="#" />
+                        <p:submenu label="Orientador" icon="ui-icon-pencil">
+                            <p:menuitem value="Candidatos" url="/orientador/candidato.jsf" />                        
                         </p:submenu>
                     </sec:authorize>
                     <sec:authorize access="hasRole('ADMIN') or hasRole('CANDIDATO')">
-                        <p:submenu label="Candidato" icon="ui-icon-help">
-                            <p:menuitem value="Cadastro" url="/candidato/home.jsf" />
-                            <p:separator />
-                            <p:menuitem value="Quit" url="#" />
+                        <p:submenu label="Candidato" icon="ui-icon-pencil">
+                            <p:menuitem value="Cadastro" url="/candidato/home.jsf" />                            
                         </p:submenu>
                     </sec:authorize>
                     <sec:authorize access="hasRole('ADMIN')">

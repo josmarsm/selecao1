@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Pagina do orientador</title>
+    </h:head>
+
+    <h:body>
+        <ui:composition template="/template/common/commonLayout.xhtml">
+            <br/><br/><br/>
+            <ui:define name="content">
+                <h:form id="formPrincipal" >
+
+                    <p:panel header="Candidatos" style="width: 95%">
+                        <p:spacer width="20" height="20" />
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <p:commandButton 
+                                icon="fa fa-plus"
+                                value="Adicionar Candidato" 
+                                actionListener="#{candidatoBean.preparar(actionEvent)}"
+                                update="formAdicionar"
+                                onclick="PF('dialogAdicionar').show();"
+                                ajax="true" />
+                        </sec:authorize>
+                        <p:dataTable 
+                            style="font-size:12px"
+                            id="tabela"
+                            var="candidato" 
+                            rows="10"
+                            paginator="true"
+                            paginatorPosition="bottom"
+                            value="#{candidatoBean.lista}"
+                            emptyMessage="Sem candidatos cadastrados">
+                            <p:column style="text-align:left; width: 220px;" 
+                                      headerText="Nome">
+                                <h:outputText value="#{candidato.nome}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Poscomp">
+                                <h:outputText value="#{candidato.poscomp}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Ano Poscomp">
+                                <h:outputText value="#{candidato.anoPoscomp}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Nota Poscomp">
+                                <h:outputText value="#{candidato.notaPoscomp}" />
+                            </p:column>                            
+                            <p:column style="text-align: center; width: 60px;" 
+                                      headerText="Eliminatória">
+                                <h:outputText value="#{candidato.notaEliminatoria}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Prova Escrita">
+                                <h:outputText value="#{candidato.notaProvaEscrita}" />
+                            </p:column>                             
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Poscomp Convertida">
+                                <h:outputText value="Poscomp Convertida" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Entrevista">
+                                <h:outputText value="#{candidato.notaEntrevista}" />
+                            </p:column>   
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Nota Final">
+                                <h:outputText value="nota Final " />
+                            </p:column>  
+                            <p:column style="text-align: center; width: 50px;" 
+                                      headerText="Status">
+                                <h:outputText id="status" value="Aprovado" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 90px" 
+                                      headerText="Ações">
+                                <p:commandButton 
+                                    icon="ui-icon-info"
+                                    title="Informações do Candidato" 
+                                    update=":formCandidato"
+                                    onclick="PF('dialogCandidato').show();"
+                                    ajax="true" >
+                                    <f:setPropertyActionListener 
+                                        target="#{candidatoBean.candidato}"
+                                        value="#{candidato}" />
+                                </p:commandButton>
+                                <p:commandButton 
+                                    icon="ui-icon-pencil"
+                                    title="Editar Candidato"
+                                    update=":formEditar"
+                                    onclick="PF('dialogEditar').show();"
+                                    ajax="true" >
+                                    <f:setPropertyActionListener 
+                                        target="#{candidatoBean.candidato}"
+                                        value="#{candidato}" />
+                                </p:commandButton>
+                                <sec:authorize access="hasRole('ADMIN')">
+                                    <p:commandButton 
+                                        icon="ui-icon-trash"
+                                        title="Excluir Candidato" 
+                                        update=":formExcluir"
+                                        onclick="PF('dialogExcluir').show();"
+                                        ajax="true" >
+                                        <f:setPropertyActionListener 
+                                            target="#{candidatoBean.candidato}"
+                                            value="#{candidato}" />
+                                    </p:commandButton>
+                                </sec:authorize>
+                            </p:column>
+                            <p:column style="text-align: center; width: 70px" 
+                                      headerText="Fichas">
+                                <p:commandButton 
+                                    icon="ui-icon-circle-check"
+                                    title="Prova Escrita" 
+                                    update=":formCandidato"
+                                    onclick="PF('dialogCandidato').show();"
+                                    ajax="true" >
+                                    <f:setPropertyActionListener 
+                                        target="#{candidatoBean.candidato}"
+                                        value="#{candidato}" />
+                                </p:commandButton>
+                                <p:commandButton 
+                                    icon="ui-icon-circle-zoomout"
+                                    title="Entrevista"
+                                    update=":formEditar"
+                                    onclick="PF('dialogEditar').show();"
+                                    ajax="true" >
+                                    <f:setPropertyActionListener 
+                                        target="#{candidatoBean.candidato}"
+                                        value="#{candidato}" />
+                                </p:commandButton>                                
+                            </p:column>                            
+                        </p:dataTable>
+                        <p:spacer width="20" height="20" />
+                        <p:separator />
+
+                    </p:panel>
+                </h:form>
+                <!-- Adicionar Pacote para Instalacao -->
+                <p:dialog 
+                    header="Adicionar Candidato"
+                    widgetVar="dialogAdicionar"
+                    modal="true"
+                    closeOnEscape="true"
+                    resizable="false" >
+                    <h:form id="formAdicionar" acceptcharset="UTF-8" enctype="application/form-data" >
+                        <h:panelGrid id="panelAdicionar" columns="2"  border="0">
+                            <p:outputLabel value="Fabricante " />
+                            <p:inputText id="Fabricante" value="#{carroBean.carro.fabricante}" />
+                            <p:outputLabel value="Modelo " />
+                            <p:inputText id="Modelo" value="#{carroBean.carro.nome}" />
+                            <p:outputLabel value="Potência (cv)" />
+                            <p:inputText id="Potencia" value="#{carroBean.carro.potencia}" />
+                            <p:outputLabel value="Vel. Máxima (km/h) " />
+                            <p:inputText id="Vmax" value="#{carroBean.carro.vmax}" />
+                            <p:outputLabel value="Peso (kg) " />
+                            <p:inputText id="Peso" value="#{carroBean.carro.peso}" />
+                            <p:outputLabel value="Cilindros " />
+                            <p:inputText id="Cilindros" value="#{carroBean.carro.cilindros}" />
+                            <p:outputLabel value="Cilindradas (cc) " />
+                            <p:inputText id="Cc" value="#{carroBean.carro.cc}" />
+                            <p:outputLabel value="País " />
+                            <p:inputText id="Pais" value="#{carroBean.carro.pais}" />
+                            <p:outputLabel value="Ano de Fabricação " />
+                            <p:inputText id="Ano" value="#{carroBean.carro.ano}" />
+                        </h:panelGrid>  
+                        <p:separator />
+                        <p:commandButton 
+                            icon="fa fa-plus"
+                            value="Adicionar" 
+                            action="#{carroBean.adicionar(actionEvent)}"
+                            update=":formPrincipal:tabela"
+                            oncomplete="dialogAdicionar.hide()"
+                            process="@form"
+                            ajax="false" />
+                        <p:commandButton 
+                            icon="fa fa-close"
+                            value="Fechar"
+                            onsuccess="PF('dialogAdicionar').hide();"
+                            update="formAdicionar"/>
+                    </h:form>
+                </p:dialog>  
+
+                <!-- Informações do Pacote -->
+                <p:dialog 
+                    header="Informações do Carro"
+                    widgetVar="dialogCarro"
+                    modal="true"
+                    closeOnEscape="true"
+                    resizable="false">
+                    <h:form id="formCandidato" acceptcharset="UTF-8" enctype="application/form-data" >
+                        <h:panelGrid id="panelPacote" columns="2" border="">
+                            <p:outputLabel value="Fabricante " />
+                            <p:outputLabel value="#{carroBean.carro.fabricante} " />
+                            <p:outputLabel value="Modelo " />
+                            <p:outputLabel value="#{carroBean.carro.nome} " />
+                            <p:outputLabel value="Potência (cv)" />
+                            <p:outputLabel value="#{carroBean.carro.potencia} " />
+                            <p:outputLabel value="Vel. Máxima (km/h) " />
+                            <p:outputLabel value="#{carroBean.carro.vmax} " />
+                            <p:outputLabel value="Peso (kg) " />
+                            <p:outputLabel value="#{carroBean.carro.peso} " />
+                            <p:outputLabel value="Cilindros " />
+                            <p:outputLabel value="#{carroBean.carro.cilindros} " />
+                            <p:outputLabel value="Cilindradas (cc) " />
+                            <p:outputLabel value="#{carroBean.carro.cc} " />
+                            <p:outputLabel value="País " />
+                            <p:outputLabel value="#{carroBean.carro.pais} " />
+                            <p:outputLabel value="Ano de Fabricação " />
+                            <p:outputLabel value="#{carroBean.carro.ano} " />
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:commandButton 
+                            icon="fa fa-close"
+                            value="Fechar"
+                            onsuccess="PF('dialogCarro').hide();"
+                            update="formCandidato"/>
+                    </h:form>
+                </p:dialog>
+
+                <!-- inicio do dialogo de edição -->
+                <p:dialog 
+                    header="Editar Candidato"
+                    widgetVar="dialogEditar"
+                    modal="true"
+                    height="200" width="400"
+                    closeOnEscape="true"
+                    resizable="false" >
+                    <h:form id="formEditar" acceptcharset="UTF-8" enctype="application/form-data" >
+                        <h:inputHidden value="#{candidatoBean.candidato.id}" />
+                        <h:panelGrid id="panelAdicionar" columns="2"  border="0">
+                            <p:outputLabel value="Nome " />
+                            <h:outputText value="#{candidatoBean.candidato.nome}" />
+                            <p:outputLabel value="Nota Poscomp" />
+                            <p:inputText id="notaPoscomp" value="#{candidatoBean.candidato.notaPoscomp}" />
+                            <p:outputLabel value="Prova Escrita" />
+                            <p:inputText id="notaProvaEscrita" value="#{candidatoBean.candidato.notaProvaEscrita}" />
+                            <p:outputLabel value="Entrevista" />
+                            <p:inputText id="notaEntrevista" value="#{candidatoBean.candidato.notaEntrevista}" />
+                            <p:outputLabel value="Status" />
+                            <h:outputText id="status" value="Aprovado" />
+                        </h:panelGrid>  
+                        <p:separator />
+                        <p:commandButton 
+                            icon="fa fa-plus"
+                            value="Salvar" 
+                            action="#{candidatoBean.editar(actionEvent)}"
+                            update=":formPrincipal:tabela"
+                            oncomplete="dialogEditar.hide()"
+                            process="@form"
+                            ajax="false" />
+                        <p:commandButton 
+                            icon="fa fa-close"
+                            value="Cancelar"
+                            onsuccess="PF('dialogEditar').hide();"
+                            update="formEditar"/>
+                    </h:form>
+                </p:dialog>
+                <!-- fim do dialogo de edição -->
+
+                <p:dialog 
+                    header="Excluir"
+                    widgetVar="dialogExcluir"
+                    modal="true"
+                    closeOnEscape="true"
+                    resizable="false">
+                    <h:form id="formExcluir" >
+                        <h:inputHidden value="#{carroBean.carro.id}" />
+                        <p:outputLabel value="Você gostaria de excluir o #{carroBean.carro.fabricante} #{carroBean.carro.nome}?" />
+                        <p:separator />
+                        <p:commandButton 
+                            icon="fa fa-trash"
+                            value="Sim" 
+                            action="#{carroBean.excluir(actionEvent)}"
+                            update="dialogAdicionar"
+                            oncomplete="dialogExcluir.hide()"
+                            process="@form"
+                            ajax="false" />
+                        <p:commandButton 
+                            icon="fa fa-close"
+                            value="Não"
+                            onsuccess="PF('dialogExcluir').hide();"
+                            update="formExcluir"/>
+                    </h:form>
+                </p:dialog> 
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

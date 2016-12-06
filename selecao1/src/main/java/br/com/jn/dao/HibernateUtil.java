@@ -1,4 +1,4 @@
-package br.com.jn.util;
+package br.com.jn.dao;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
