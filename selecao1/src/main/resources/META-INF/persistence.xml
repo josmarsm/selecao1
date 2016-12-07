@@ -4,6 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>java:app/selecao</jta-data-source>
     <class>br.com.jn.model.Candidato</class>
+    <class>br.com.jn.model.Users</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
