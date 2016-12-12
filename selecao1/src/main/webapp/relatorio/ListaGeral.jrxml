@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd6965c7-977d-490e-b515-edd2b7d7eb3c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+  `drv`.`Nome`,
+  `drv`.`Linha1`,
+  `drv`.`Orientador1`,
+  `drv`.`NotaEliminatoria`,
+  `drv`.`Poscomp`,
+  `drv`.`AnoPoscomp`,
+  `drv`.`MediaPoscomp`,
+  `drv`.`NotaPoscomp`,
+  `drv`.`Bolsa`,
+  `ROUND`(`drv`.`NotaProvaEscrita`, 2),
+  `ROUND`(`drv`.`NotaEntrevista`, 2),
+  `ROUND`(`drv`.`Nescrita`, 2),
+  `ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2),
+  `ROUND`(`drv`.`Nfinal_poscomp`, 2),
+  `ROUND`(`drv`.`Nfinal_provaescrita`, 2),
+  `ROUND`(`drv`.`Nfinal`, 2),
+  CASE WHEN `drv`.`Nfinal` >= 7 THEN 'Aprovado' ELSE 'Reprovado'
+  END AS `SituacaoFinal`
+FROM
+  (SELECT *,
+    CASE WHEN `drv`.`Poscomp` = 'Sim' THEN `drv`.`Nfinal_poscomp`
+      ELSE `drv`.`Nfinal_provaescrita` END AS `Nfinal`
+  FROM (SELECT *,
+      ((`drv`.`NotaEliminatoria` * 0.4) + (((`drv`.`NotaProvaEscrita` * 0.5) +
+      (`drv`.`NotaEntrevista` * 0.5)) * 0.6)) AS `Nfinal_provaescrita`,
+      ((`drv`.`NotaEliminatoria` * 0.4) + (((`drv`.`Nescrita` * 0.5) +
+      (`drv`.`NotaEntrevista` * 0.5)) * 0.6)) AS `Nfinal_poscomp`,
+      ((10 * 0.4) + (((10 * 0.5) + (10 * 0.5)) * 0.6)) AS `Nfinal_verificao`
+    FROM (SELECT *,
+        CASE WHEN `drv`.`Nescrita` >= 10 THEN '10'
+          WHEN `drv`.`Nescrita` <= 0 THEN '0' ELSE `drv`.`Nescrita`
+        END AS `Nfinal_poscompCorrigida`
+      FROM (SELECT `c`.*,
+          `m`.`MediaPoscomp`,
+          8 + ((`c`.`NotaPoscomp` - `m`.`MediaPoscomp`) * 0.3) AS `Nescrita`
+        FROM `candidato` `c`
+          LEFT JOIN `MediaPoscomp` `m` ON `c`.`AnoPoscomp` = `m`.`AnoPoscomp`
+        WHERE `c`.`NotaEliminatoria` >= 5
+        ORDER BY 
+`c`.`Orientador1`,
+`c`.`Nome`
+) `drv`) `drv`) `drv`) `drv`]]>
+	</queryString>
+	<field name="Nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Linha1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Orientador1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NotaEliminatoria" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Poscomp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AnoPoscomp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="MediaPoscomp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NotaPoscomp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Bolsa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="`ROUND`(`drv`.`NotaProvaEscrita`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`NotaEntrevista`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nescrita`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal_poscomp`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal_provaescrita`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal`, 2)" class="java.lang.Double"/>
+	<field name="SituacaoFinal" class="java.lang.String"/>
+	<group name="Orientador">
+		<groupExpression><![CDATA[$F{Orientador1}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<textField>
+					<reportElement x="30" y="6" width="100" height="20" uuid="c74a8bb6-374b-4d2d-9e1f-38378f493f32"/>
+					<textFieldExpression><![CDATA[$F{Orientador1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="65" width="32" height="20" uuid="b248f851-1ecb-4625-9d7e-9021c5f0a0d3"/>
+				<textFieldExpression><![CDATA[$F{Nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="65" width="32" height="20" uuid="f347fa1b-c079-4235-b58b-dbaaad5df8fc"/>
+				<textFieldExpression><![CDATA[$F{Linha1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="65" width="32" height="20" uuid="34bbf1bd-178e-48cd-a34c-0b000a927173"/>
+				<textFieldExpression><![CDATA[$F{Orientador1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="96" y="65" width="32" height="20" uuid="aa497c6a-c8d9-475f-b221-f36e3be59d81"/>
+				<textFieldExpression><![CDATA[$F{NotaEliminatoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="65" width="32" height="20" uuid="251a7423-dea0-4e4b-b1e0-c763504f0f43"/>
+				<textFieldExpression><![CDATA[$F{Poscomp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="65" width="32" height="20" uuid="45d97c0c-bc11-4e91-b2d9-fd97c0d271de"/>
+				<textFieldExpression><![CDATA[$F{AnoPoscomp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="65" width="32" height="20" uuid="7c925f03-01e4-4f4f-84dd-df32df98fbb9"/>
+				<textFieldExpression><![CDATA[$F{MediaPoscomp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="224" y="65" width="32" height="20" uuid="ae407eba-4c2c-478a-9b8a-e69641e94fb4"/>
+				<textFieldExpression><![CDATA[$F{NotaPoscomp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="65" width="32" height="20" uuid="35faee77-2b93-484f-a77c-32ff3551857b"/>
+				<textFieldExpression><![CDATA[$F{Bolsa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="288" y="65" width="32" height="20" uuid="4e271832-a065-40b7-bcfb-fb77bd76c515"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`NotaProvaEscrita`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="65" width="32" height="20" uuid="912d8b2e-12d2-4ff2-b1fc-60e0364b598e"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`NotaEntrevista`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="65" width="32" height="20" uuid="aa3d9c1b-4019-4275-941a-1cc5f8e929e4"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nescrita`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="384" y="65" width="32" height="20" uuid="98aa5c2f-b40d-4976-923e-35b4a80a5714"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="65" width="32" height="20" uuid="b77c3559-56e8-4f9c-959f-69e74a56de2e"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal_poscomp`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="448" y="65" width="32" height="20" uuid="72a61d74-804f-40f0-817a-2bf80cefd235"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal_provaescrita`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="65" width="32" height="20" uuid="811da928-bad8-42d9-80f1-2d96168b4e01"/>
+				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal`, 2)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="512" y="65" width="32" height="20" uuid="7ddc2982-6de4-41c2-9998-40d520d373b1"/>
+				<textFieldExpression><![CDATA[$F{SituacaoFinal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="32" height="20" uuid="ee56eed5-d433-4400-a913-ae7d6a93eb19"/>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="0" width="32" height="20" uuid="2eafd82c-fa2a-4647-a4c4-52a164da59fd"/>
+				<text><![CDATA[Linha1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="64" y="0" width="32" height="20" uuid="d78327a7-f95f-4281-9587-78bc69963b21"/>
+				<text><![CDATA[Orientador1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="96" y="0" width="32" height="20" uuid="a67b7bda-0b2d-40c1-8fbd-dd5e9ab4130b"/>
+				<text><![CDATA[NotaEliminatoria]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="128" y="0" width="32" height="20" uuid="b5f4a736-05bf-421b-b107-ba2f7b566d9f"/>
+				<text><![CDATA[Poscomp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="32" height="20" uuid="b45ece22-7a74-4dee-9976-15a824390f17"/>
+				<text><![CDATA[AnoPoscomp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="0" width="32" height="20" uuid="fcde0865-c957-4f74-abad-714aab692ad7"/>
+				<text><![CDATA[MediaPoscomp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="0" width="32" height="20" uuid="3e5c1ebc-72f0-48df-8d1d-07c02e7020d7"/>
+				<text><![CDATA[NotaPoscomp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="256" y="0" width="32" height="20" uuid="6e149eb5-346b-40aa-b91a-4b1fb1e4f663"/>
+				<text><![CDATA[Bolsa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="288" y="0" width="32" height="20" uuid="68f8968e-2fb2-421f-8c41-943f8c23da07"/>
+				<text><![CDATA[`ROUND`(`drv`.`NotaProvaEscrita`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="32" height="20" uuid="7c1c0f98-0c07-4691-a323-582fc988fa5b"/>
+				<text><![CDATA[`ROUND`(`drv`.`NotaEntrevista`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="352" y="0" width="32" height="20" uuid="2dfa7a5b-f975-4c4a-9084-58155a1ca114"/>
+				<text><![CDATA[`ROUND`(`drv`.`Nescrita`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="0" width="32" height="20" uuid="27c36cd0-6f62-4aa5-90bf-ef2737f785f0"/>
+				<text><![CDATA[`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="0" width="32" height="20" uuid="a02fe85d-92c4-498c-89a6-4320d8915741"/>
+				<text><![CDATA[`ROUND`(`drv`.`Nfinal_poscomp`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="0" width="32" height="20" uuid="5b3faad8-7121-4a07-9d6c-4021bfbd1db8"/>
+				<text><![CDATA[`ROUND`(`drv`.`Nfinal_provaescrita`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="32" height="20" uuid="d760bb7c-52ff-442c-b0e3-69f77658e09b"/>
+				<text><![CDATA[`ROUND`(`drv`.`Nfinal`, 2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="0" width="32" height="20" uuid="fcebcfe0-63f3-48b4-9fc9-efd26cdacc21"/>
+				<text><![CDATA[SituacaoFinal]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

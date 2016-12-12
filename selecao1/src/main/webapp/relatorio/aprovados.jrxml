@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aed8319d-f043-4c49-a61c-e8382650d732">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+  `drv`.`Nome`,
+  `drv`.`Linha1`,
+  `drv`.`Orientador1`,
+  `drv`.`NotaEliminatoria`,
+  `drv`.`Poscomp`,
+  `drv`.`AnoPoscomp`,
+  `drv`.`MediaPoscomp`,
+  `drv`.`NotaPoscomp`,
+  `drv`.`Bolsa`,
+  `ROUND`(`drv`.`NotaProvaEscrita`, 2),
+  `ROUND`(`drv`.`NotaEntrevista`, 2),
+  `ROUND`(`drv`.`Nescrita`, 2),
+  `ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2),
+  `ROUND`(`drv`.`Nfinal_poscomp`, 2),
+  `ROUND`(`drv`.`Nfinal_provaescrita`, 2),
+  `ROUND`(`drv`.`Nfinal`, 2),
+  CASE WHEN `drv`.`Nfinal` >= 7 THEN 'Aprovado' ELSE 'Reprovado'
+  END AS `SituacaoFinal`
+FROM
+  (SELECT *,
+    CASE WHEN `drv`.`Poscomp` = 'Sim' THEN `drv`.`Nfinal_poscomp`
+      ELSE `drv`.`Nfinal_provaescrita` END AS `Nfinal`
+  FROM (SELECT *,
+      ((`drv`.`NotaEliminatoria` * 0.4) + (((`drv`.`NotaProvaEscrita` * 0.5) +
+      (`drv`.`NotaEntrevista` * 0.5)) * 0.6)) AS `Nfinal_provaescrita`,
+      ((`drv`.`NotaEliminatoria` * 0.4) + (((`drv`.`Nescrita` * 0.5) +
+      (`drv`.`NotaEntrevista` * 0.5)) * 0.6)) AS `Nfinal_poscomp`,
+      ((10 * 0.4) + (((10 * 0.5) + (10 * 0.5)) * 0.6)) AS `Nfinal_verificao`
+    FROM (SELECT *,
+        CASE WHEN `drv`.`Nescrita` >= 10 THEN '10'
+          WHEN `drv`.`Nescrita` <= 0 THEN '0' ELSE `drv`.`Nescrita`
+        END AS `Nfinal_poscompCorrigida`
+      FROM (SELECT `c`.*,
+          `m`.`MediaPoscomp`,
+          8 + ((`c`.`NotaPoscomp` - `m`.`MediaPoscomp`) * 0.3) AS `Nescrita`
+        FROM `candidato` `c`
+          LEFT JOIN `MediaPoscomp` `m` ON `c`.`AnoPoscomp` = `m`.`AnoPoscomp`
+        WHERE `c`.`NotaEliminatoria` >= 5
+        ORDER BY `c`.`Nome`) `drv`) `drv`) `drv`) `drv`
+WHERE
+  CASE WHEN `drv`.`Nfinal` >= 7 THEN 'Aprovado' ELSE 'Reprovado'
+  END = 'Aprovado';]]>
+	</queryString>
+	<field name="Nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Linha1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Orientador1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NotaEliminatoria" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Poscomp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AnoPoscomp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="MediaPoscomp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NotaPoscomp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Bolsa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="`ROUND`(`drv`.`NotaProvaEscrita`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`NotaEntrevista`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nescrita`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal_poscomp`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal_provaescrita`, 2)" class="java.lang.Double"/>
+	<field name="`ROUND`(`drv`.`Nfinal`, 2)" class="java.lang.Double"/>
+	<field name="SituacaoFinal" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="59" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="11" y="7" width="100" height="20" uuid="ae7577c5-4bc7-4f8d-9da7-107a81f45cc9"/>
+				<textFieldExpression><![CDATA[$F{Nome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
