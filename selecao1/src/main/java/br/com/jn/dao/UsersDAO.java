@@ -18,7 +18,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -71,15 +74,33 @@ public class UsersDAO {
             return false;
         }
     }
-public List<Users> listar() {
-        
+
+    public List<Users> listar() {
+
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Criteria crit = session.createCriteria(Users.class);        
+        Criteria crit = session.createCriteria(Users.class);
         crit.addOrder(Order.asc("nome"));
-        
+
         List<Users> lista = crit.list();
         session.close();
         return lista;
+    }
+
+    public Users procuraUsuario() {
+        Authentication a = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = a.getPrincipal();
+        String username = "";
+        username = ((UserDetails) principal).getUsername();
+        System.out.println("Username recuperado para recuperar o nome completo e o id {" + username + "}");
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Criteria crit = session.createCriteria(Users.class);
+
+        crit.add(Restrictions.eq("username", "alencar"));
+
+        Users users = (Users) crit.uniqueResult();
+        session.close();
+        return users;
     }
 }

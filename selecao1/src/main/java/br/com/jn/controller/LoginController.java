@@ -128,23 +128,4 @@ public class LoginController implements PhaseListener {
         }
         return username;
     }
-
-    public Users procuraUsers() {
-        
-        if (context instanceof SecurityContext) {
-            Authentication authentication = context.getAuthentication();
-            if (authentication instanceof Authentication) {
-                login = (((User) authentication.getPrincipal()).getUsername());
-            }
-        }
-        
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        
-        Query query = session.createQuery("from Users user where user.username like ?");
-        query.setString(0, login);
-        
-        
-        return (Users) query.uniqueResult();
-    }
 }

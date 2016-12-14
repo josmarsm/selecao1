@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd6965c7-977d-490e-b515-edd2b7d7eb3c">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="70" rightMargin="42" topMargin="20" bottomMargin="56" uuid="cd6965c7-977d-490e-b515-edd2b7d7eb3c">
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="6"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{SituacaoFinal}.equals("Aprovado")]]></conditionExpression>
+			<style mode="Transparent" forecolor="#00FF00"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{SituacaoFinal}.equals("Reprovado")]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
 	<queryString>
 		<![CDATA[SELECT
-  `drv`.`Nome`,
-  `drv`.`Linha1`,
-  `drv`.`Orientador1`,
-  `drv`.`NotaEliminatoria`,
-  `drv`.`Poscomp`,
-  `drv`.`AnoPoscomp`,
-  `drv`.`MediaPoscomp`,
-  `drv`.`NotaPoscomp`,
-  `drv`.`Bolsa`,
-  `ROUND`(`drv`.`NotaProvaEscrita`, 2),
-  `ROUND`(`drv`.`NotaEntrevista`, 2),
-  `ROUND`(`drv`.`Nescrita`, 2),
-  `ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2),
-  `ROUND`(`drv`.`Nfinal_poscomp`, 2),
-  `ROUND`(`drv`.`Nfinal_provaescrita`, 2),
-  `ROUND`(`drv`.`Nfinal`, 2),
-  CASE WHEN `drv`.`Nfinal` >= 7 THEN 'Aprovado' ELSE 'Reprovado'
-  END AS `SituacaoFinal`
+Nome,
+Linha1,
+Orientador1,
+NotaEliminatoria,
+Poscomp,
+AnoPoscomp,
+MediaPoscomp,
+NotaPoscomp,
+Bolsa,
+ROUND(NotaProvaEscrita, 2) as NotaProvaEscrita,
+ROUND(NotaEntrevista, 2) as NotaEntrevista,
+ROUND(Nescrita, 2) as Nescrita,
+ROUND(Nfinal_poscompCorrigida, 2) as Nfinal_poscompCorrigida,
+ROUND(Nfinal_poscomp, 2) as Nfinal_poscomp, 
+ROUND(Nfinal_provaescrita, 2) as Nfinal_provaescrita,
+ROUND(Nfinal, 2) as Nfinal,
+  CASE WHEN Nfinal >= 7 THEN 'Aprovado' ELSE 'Reprovado'
+  END AS SituacaoFinal
 FROM
   (SELECT *,
     CASE WHEN `drv`.`Poscomp` = 'Sim' THEN `drv`.`Nfinal_poscomp`
@@ -75,21 +85,28 @@ FROM
 	<field name="Bolsa" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="`ROUND`(`drv`.`NotaProvaEscrita`, 2)" class="java.lang.Double"/>
-	<field name="`ROUND`(`drv`.`NotaEntrevista`, 2)" class="java.lang.Double"/>
-	<field name="`ROUND`(`drv`.`Nescrita`, 2)" class="java.lang.Double"/>
-	<field name="`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)" class="java.lang.Double"/>
-	<field name="`ROUND`(`drv`.`Nfinal_poscomp`, 2)" class="java.lang.Double"/>
-	<field name="`ROUND`(`drv`.`Nfinal_provaescrita`, 2)" class="java.lang.Double"/>
-	<field name="`ROUND`(`drv`.`Nfinal`, 2)" class="java.lang.Double"/>
+	<field name="NotaProvaEscrita" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NotaEntrevista" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nescrita" class="java.lang.Double"/>
+	<field name="Nfinal_poscompCorrigida" class="java.lang.Double"/>
+	<field name="Nfinal_poscomp" class="java.lang.Double"/>
+	<field name="Nfinal_provaescrita" class="java.lang.Double"/>
+	<field name="Nfinal" class="java.lang.Double"/>
 	<field name="SituacaoFinal" class="java.lang.String"/>
-	<group name="Orientador">
+	<group name="Orientador" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{Orientador1}]]></groupExpression>
 		<groupHeader>
-			<band height="50">
+			<band height="25">
 				<textField>
-					<reportElement x="30" y="6" width="100" height="20" uuid="c74a8bb6-374b-4d2d-9e1f-38378f493f32"/>
-					<textFieldExpression><![CDATA[$F{Orientador1}]]></textFieldExpression>
+					<reportElement mode="Opaque" x="0" y="4" width="483" height="20" printWhenGroupChanges="Orientador" backcolor="#CCCCCC" uuid="c74a8bb6-374b-4d2d-9e1f-38378f493f32"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Orientador: " +$F{Orientador1}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -101,159 +118,240 @@ FROM
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="61" splitType="Stretch"/>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="454" height="20" uuid="9fc6feec-bbac-45b7-95bb-4c7d6f75be0d"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lista de Candidatos - Por Orientador]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="21" width="454" height="13" uuid="d01cce4c-9403-45ea-9033-1ba1cb91b05a"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Processo Seletivo PPGI - Ingresso 2017/I]]></text>
+			</staticText>
+			<line>
+				<reportElement x="4" y="34" width="471" height="1" uuid="ff88ca39-76bb-418a-bb58-a04d43be102e"/>
+			</line>
+		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="166" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="398" y="3" width="81" height="50" uuid="898fce52-38fc-445c-bea5-98c50ce17dfd"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="4" y="84" width="475" height="50" uuid="a96ae879-fc82-4133-96d6-1fac9a3ef0de"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
 			<textField>
-				<reportElement x="0" y="65" width="32" height="20" uuid="b248f851-1ecb-4625-9d7e-9021c5f0a0d3"/>
+				<reportElement x="39" y="2" width="212" height="15" uuid="b248f851-1ecb-4625-9d7e-9021c5f0a0d3"/>
 				<textFieldExpression><![CDATA[$F{Nome}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="32" y="65" width="32" height="20" uuid="f347fa1b-c079-4235-b58b-dbaaad5df8fc"/>
+				<reportElement x="101" y="18" width="227" height="15" uuid="f347fa1b-c079-4235-b58b-dbaaad5df8fc"/>
 				<textFieldExpression><![CDATA[$F{Linha1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="64" y="65" width="32" height="20" uuid="34bbf1bd-178e-48cd-a34c-0b000a927173"/>
-				<textFieldExpression><![CDATA[$F{Orientador1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="96" y="65" width="32" height="20" uuid="aa497c6a-c8d9-475f-b221-f36e3be59d81"/>
+				<reportElement x="90" y="116" width="30" height="20" uuid="aa497c6a-c8d9-475f-b221-f36e3be59d81"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{NotaEliminatoria}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="65" width="32" height="20" uuid="251a7423-dea0-4e4b-b1e0-c763504f0f43"/>
+				<reportElement x="350" y="34" width="32" height="15" uuid="251a7423-dea0-4e4b-b1e0-c763504f0f43"/>
 				<textFieldExpression><![CDATA[$F{Poscomp}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="160" y="65" width="32" height="20" uuid="45d97c0c-bc11-4e91-b2d9-fd97c0d271de"/>
-				<textFieldExpression><![CDATA[$F{AnoPoscomp}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="192" y="65" width="32" height="20" uuid="7c925f03-01e4-4f4f-84dd-df32df98fbb9"/>
-				<textFieldExpression><![CDATA[$F{MediaPoscomp}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="224" y="65" width="32" height="20" uuid="ae407eba-4c2c-478a-9b8a-e69641e94fb4"/>
-				<textFieldExpression><![CDATA[$F{NotaPoscomp}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="256" y="65" width="32" height="20" uuid="35faee77-2b93-484f-a77c-32ff3551857b"/>
+				<reportElement x="168" y="34" width="32" height="15" uuid="35faee77-2b93-484f-a77c-32ff3551857b"/>
 				<textFieldExpression><![CDATA[$F{Bolsa}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="288" y="65" width="32" height="20" uuid="4e271832-a065-40b7-bcfb-fb77bd76c515"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`NotaProvaEscrita`, 2)}]]></textFieldExpression>
+				<reportElement x="320" y="116" width="30" height="20" uuid="912d8b2e-12d2-4ff2-b1fc-60e0364b598e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NotaEntrevista}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="320" y="65" width="32" height="20" uuid="912d8b2e-12d2-4ff2-b1fc-60e0364b598e"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`NotaEntrevista`, 2)}]]></textFieldExpression>
+				<reportElement x="448" y="116" width="30" height="20" uuid="811da928-bad8-42d9-80f1-2d96168b4e01"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nfinal}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="352" y="65" width="32" height="20" uuid="aa3d9c1b-4019-4275-941a-1cc5f8e929e4"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nescrita`, 2)}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="384" y="65" width="32" height="20" uuid="98aa5c2f-b40d-4976-923e-35b4a80a5714"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="416" y="65" width="32" height="20" uuid="b77c3559-56e8-4f9c-959f-69e74a56de2e"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal_poscomp`, 2)}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="448" y="65" width="32" height="20" uuid="72a61d74-804f-40f0-817a-2bf80cefd235"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal_provaescrita`, 2)}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="480" y="65" width="32" height="20" uuid="811da928-bad8-42d9-80f1-2d96168b4e01"/>
-				<textFieldExpression><![CDATA[$F{`ROUND`(`drv`.`Nfinal`, 2)}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="512" y="65" width="32" height="20" uuid="7ddc2982-6de4-41c2-9998-40d520d373b1"/>
+				<reportElement style="style1" x="408" y="19" width="60" height="20" uuid="7ddc2982-6de4-41c2-9998-40d520d373b1"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="10"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{SituacaoFinal}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="0" width="32" height="20" uuid="ee56eed5-d433-4400-a913-ae7d6a93eb19"/>
-				<text><![CDATA[Nome]]></text>
+				<reportElement x="8" y="2" width="32" height="15" uuid="ee56eed5-d433-4400-a913-ae7d6a93eb19"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="32" y="0" width="32" height="20" uuid="2eafd82c-fa2a-4647-a4c4-52a164da59fd"/>
-				<text><![CDATA[Linha1]]></text>
+				<reportElement x="8" y="18" width="97" height="15" uuid="2eafd82c-fa2a-4647-a4c4-52a164da59fd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Linha de Pesquisa:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="64" y="0" width="32" height="20" uuid="d78327a7-f95f-4281-9587-78bc69963b21"/>
-				<text><![CDATA[Orientador1]]></text>
+				<reportElement x="8" y="116" width="93" height="20" uuid="a67b7bda-0b2d-40c1-8fbd-dd5e9ab4130b"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Análise do currículo:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="96" y="0" width="32" height="20" uuid="a67b7bda-0b2d-40c1-8fbd-dd5e9ab4130b"/>
-				<text><![CDATA[NotaEliminatoria]]></text>
+				<reportElement x="211" y="34" width="139" height="15" uuid="b5f4a736-05bf-421b-b107-ba2f7b566d9f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Utilizar nota do POSCOMP?:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="128" y="0" width="32" height="20" uuid="b5f4a736-05bf-421b-b107-ba2f7b566d9f"/>
-				<text><![CDATA[Poscomp]]></text>
+				<reportElement x="8" y="34" width="158" height="15" uuid="6e149eb5-346b-40aa-b91a-4b1fb1e4f663"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Participar do Ranking de Bolsas:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="160" y="0" width="32" height="20" uuid="b45ece22-7a74-4dee-9976-15a824390f17"/>
-				<text><![CDATA[AnoPoscomp]]></text>
+				<reportElement x="273" y="116" width="55" height="20" uuid="7c1c0f98-0c07-4691-a323-582fc988fa5b"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Entrevista:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="192" y="0" width="32" height="20" uuid="fcde0865-c957-4f74-abad-714aab692ad7"/>
-				<text><![CDATA[MediaPoscomp]]></text>
+				<reportElement x="398" y="116" width="50" height="20" uuid="d760bb7c-52ff-442c-b0e3-69f77658e09b"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Média Final:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="224" y="0" width="32" height="20" uuid="3e5c1ebc-72f0-48df-8d1d-07c02e7020d7"/>
-				<text><![CDATA[NotaPoscomp]]></text>
+				<reportElement x="1" y="68" width="482" height="20" uuid="24a7a633-be4b-431e-b6c5-224e5bbb65a4"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quadro de Notas do Processo Seletivo]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="256" y="0" width="32" height="20" uuid="6e149eb5-346b-40aa-b91a-4b1fb1e4f663"/>
-				<text><![CDATA[Bolsa]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="288" y="0" width="32" height="20" uuid="68f8968e-2fb2-421f-8c41-943f8c23da07"/>
-				<text><![CDATA[`ROUND`(`drv`.`NotaProvaEscrita`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="320" y="0" width="32" height="20" uuid="7c1c0f98-0c07-4691-a323-582fc988fa5b"/>
-				<text><![CDATA[`ROUND`(`drv`.`NotaEntrevista`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="352" y="0" width="32" height="20" uuid="2dfa7a5b-f975-4c4a-9084-58155a1ca114"/>
-				<text><![CDATA[`ROUND`(`drv`.`Nescrita`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="384" y="0" width="32" height="20" uuid="27c36cd0-6f62-4aa5-90bf-ef2737f785f0"/>
-				<text><![CDATA[`ROUND`(`drv`.`Nfinal_poscompCorrigida`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="416" y="0" width="32" height="20" uuid="a02fe85d-92c4-498c-89a6-4320d8915741"/>
-				<text><![CDATA[`ROUND`(`drv`.`Nfinal_poscomp`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="448" y="0" width="32" height="20" uuid="5b3faad8-7121-4a07-9d6c-4021bfbd1db8"/>
-				<text><![CDATA[`ROUND`(`drv`.`Nfinal_provaescrita`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="480" y="0" width="32" height="20" uuid="d760bb7c-52ff-442c-b0e3-69f77658e09b"/>
-				<text><![CDATA[`ROUND`(`drv`.`Nfinal`, 2)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="512" y="0" width="32" height="20" uuid="fcebcfe0-63f3-48b4-9fc9-efd26cdacc21"/>
-				<text><![CDATA[SituacaoFinal]]></text>
-			</staticText>
+			<textField>
+				<reportElement x="8" y="50" width="79" height="15" uuid="a197c1d7-1202-44a4-9fa2-586ca4a48abe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "Ano POSCOMP" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="50" width="33" height="15" uuid="baa28127-b164-4fde-8d12-127ad61011ad"/>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? $F{AnoPoscomp} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="135" y="50" width="79" height="15" uuid="4812ed9f-d8e2-43b8-99fc-ca87799fca47"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "Pontuação Obtida" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="50" width="79" height="15" uuid="ea34cafc-2a99-433e-bbd4-c73b1874d5c8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "Media Nacional" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="50" width="26" height="15" uuid="80ec27e9-f6a0-4610-b4c0-44215b572b06"/>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? $F{MediaPoscomp}.toString() : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="50" width="32" height="15" uuid="82f9435e-01fb-408e-885b-54dc0699a7d1"/>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? $F{NotaPoscomp}.toString() : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="262" y="88" width="194" height="27" uuid="dfcf44b9-32bf-4104-b65b-a1f54f89c59e"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "Nota POSCOMP Equalizada (if >10:10  ou if<0:0)" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="8" y="88" width="202" height="27" uuid="992642f7-1d5d-4c4c-94fa-6d5844e4a3ad"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "Pontuação do POSCOMP convertida em nota" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="187" y="88" width="30" height="20" uuid="96c4101d-748b-4fd6-9203-ba6fa80987fe"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? $F{Nescrita}.toString() : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="447" y="88" width="30" height="20" uuid="7a5894c6-31af-4289-b7a8-052c0b2c6f67"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? $F{Nfinal_poscompCorrigida}.toString(): ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="116" width="56" height="20" uuid="cc4a1b0a-22ae-4304-9149-6e6aa8469d05"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "" : "Prova Escrita"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="116" width="30" height="20" uuid="d934e3b1-17c0-49af-b130-ca1f348e75a5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "" : $F{NotaProvaEscrita}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="7" y="134" width="194" height="27" uuid="fc1aa8f2-4027-4609-a598-84579b45f5f5"/>
+				<textElement rotation="None">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Poscomp}.equals("Sim") ? "Nota POSCOMP Equalizada (if >10:10  ou if<0:0)" : ""]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band splitType="Stretch"/>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="7" y="4" width="478" height="19" printWhenGroupChanges="Orientador" uuid="5f698e85-cb38-461e-97ca-8a7811119fbb"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Orientador: " +$F{Orientador1}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>

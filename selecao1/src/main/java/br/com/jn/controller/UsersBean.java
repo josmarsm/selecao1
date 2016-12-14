@@ -24,11 +24,21 @@ public class UsersBean implements Serializable {
     private Users users;
     private List lista;
     private Integer id;
+    private Users logado;
 
     public UsersBean() {
         this.users = new Users();
         this.lista = new UsersDAO().listar();
         this.id = 0;
+        this.logado = new UsersDAO().procuraUsuario();
+    }
+
+    public Users getLogado() {
+        return logado;
+    }
+
+    public void setLogado(Users logado) {
+        this.logado = logado;
     }
 
     public Users getUsers() {
@@ -40,7 +50,7 @@ public class UsersBean implements Serializable {
     }
 
     public List<Users> getLista() {
-           return lista;
+        return lista;
     }
 
     public void setLista(List lista) {

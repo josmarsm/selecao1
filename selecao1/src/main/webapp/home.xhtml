@@ -11,12 +11,12 @@
 
             <ui:define name="content">
                 <h:form>
-                    <h3>Bem vindo #{loginController.currentUsername}</h3>
-                    <h:outputText value="SEJA BEM VINDO(A) #{loginController.procuraUsers().getUserId()}!"/>
+                    <h3>Bem vindo #{usersBean.users.nome}</h3>
+                    <h:outputText value="SEJA BEM VINDO(A) !"/>
                                        
                     
                     <br/>
-                    <h:outputText value="Esta é a sua página inicial para acessar as funções correspondentes ao seu perfil
+                    <h:outputText value="Esta Ã© a sua pÃ¡gina inicial para acessar as funÃ§Ãµes correspondentes ao seu perfil
                                   por favor utilize o menu!"/>
                     <br/>
                     <h:commandLink action="#{loginController.doLogout}" value="Logout"/>
