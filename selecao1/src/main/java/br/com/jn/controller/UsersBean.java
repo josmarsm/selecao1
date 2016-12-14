@@ -22,10 +22,12 @@ import javax.faces.event.ActionEvent;
 public class UsersBean implements Serializable {
 
     private Users users;
+    private Users logado;
     private List lista;
     private Integer id;
 
     public UsersBean() {
+        this.logado = new UsersDAO().procuraUsuario();
         this.users = new Users();
         this.lista = new UsersDAO().listar();
         this.id = 0;
@@ -41,6 +43,14 @@ public class UsersBean implements Serializable {
 
     public List<Users> getLista() {
            return lista;
+    }
+
+    public Users getLogado() {
+        return logado;
+    }
+
+    public void setLogado(Users logado) {
+        this.logado = logado;
     }
 
     public void setLista(List lista) {
